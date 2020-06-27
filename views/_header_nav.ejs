@@ -1,0 +1,27 @@
+
+    <nav class="header navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">TrapMail</a>
+
+        <ol id="breadcrumb" class="breadcrumb mb-1 flex-item text-white">
+            <li class="breadcrumb-item"><a href="/">ホーム</a></li>
+            <li class="breadcrumb-item mbox_name"><a href=""></a></li>
+            <li class="breadcrumb-item subject active text-hide"></li>
+        </ol>
+
+        <ul class="list-inline d-flex mb-0 mr-2">
+            <li class="list-inline-item ml-1">
+                <div class="dropdown">
+                    <span type="button" class="px-0 py-0 text-white" id="profileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="sr-only">Toggle profile options dropdown</span><%= session.user_name %>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </span>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown" x-placement="bottom-end" style="transform: translate3d(-122px, 32px, 0px); top: 0px; left: 0px; will-change: transform;">
+                        <a class="dropdown-item" href="/">受信箱一覧</a>
+                        <a class="dropdown-item" href="/setting">情報変更</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/logout">ログアウト</a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </nav>

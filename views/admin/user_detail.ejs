@@ -1,0 +1,107 @@
+<%- include("./_header.ejs", {title: 'ユーザー'}) %>
+<body>
+
+    <%- include("./_header_nav.ejs") %>
+
+    <div id="content" class="container-fluid">
+
+        <%- include("./_menu.ejs", {menu:'user'}) %>
+
+        <main role="main" class="mailmain col-md-9 ml-sm-auto col-lg-10 px-4">
+
+            <h4>#<%= item.id %></h4>
+
+            <% if (messages.success) { %>
+            <div class="alert alert-success" role="alert"><%=messages.success %></div><br/>
+            <% } %>
+
+            <form method="post" action="/admin/user">
+                <input type="hidden" name="id" value="<%= item.id %>">
+
+                <div class="mb-3">
+                    <label for="username">名前</label>
+                    <input type="text" class="form-control <%= errors['name'] ? 'is-invalid' : '' %>" id="username" placeholder="Username" name="name" value="<%= item.name %>">
+                    <div class="invalid-feedback"><%= errors['name'] %></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="email">メールアドレス</label>
+                    <input type="email" class="form-control <%= errors['email'] ? 'is-invalid' : '' %>" id="email" placeholder="you@example.com" name="email" value="<%= item.email %>">
+                    <div class="invalid-feedback"><%= errors['email'] %></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password">パスワード</label>
+                    <input type="password" class="form-control <%= errors['pass'] ? 'is-invalid' : '' %>" id="password" placeholder="" name="pass" value="<%= item.pass %>">
+                    <div class="invalid-feedback"><%= errors['pass'] %></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="country">受信箱</label>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="mailboxes list-group">
+                            <% (item.userboxes || []).forEach(b => { %>
+                                <li class="list-group-item"><span class="title"><%= b.title %></span>
+                                    <button type="button" class="close" aria-label="閉じる"><span aria-hidden="true">&times;</span></button>
+                                    <input type="hidden" name="mailbox_id[]" value="<%= b.id %>">
+                                </li>
+                            <% }) %>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+
+                            <div class="input-group">
+                                <select class="custom-select <%= errors['mailbox_id'] ? 'is-invalid' : '' %>" name="mailboxes">
+                                    <option value=""></option>
+                                <% mailboxes.forEach(b => { %>
+                                    <% var disabled = (item.userboxes || []).filter(function(o){ return o.id == b.id; }).length ? 'disabled' : '' %>
+                                    <option value="<%= b.id %>" <%= disabled %>><%= b.title %></option>
+                                <% }) %>
+                                </select>
+                                <div class="input-group-append">
+                                    <button id="box_add" class="btn btn-outline-secondary" type="button">追加</button>
+                                </div>
+                            </div>
+                            <div class="invalid-feedback"><%= errors['mailbox_id'] %></div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="mb-4">
+
+                <div class="text-center">
+                    <a class="back btn btn-success btn-lg" href="/admin/user">戻る</a>
+                    <button class="submit btn btn-primary btn-lg"><%= item.id ? '更新' : '登録' %></button>
+                </div>
+            </form>
+
+        </main>
+
+    </div>
+
+    <%- include("./_js.ejs") %>
+    <script>
+        $(function(){
+
+            $('#box_add').click(function(){
+                var $target = $('select[name=mailboxes] option:selected');
+                if ($target.val()) {
+                    $target.prop('disabled', true);
+                    var $li = $('<li class="list-group-item"><span class="title"></span><button type="button" class="close" aria-label="閉じる"><span aria-hidden="true">&times;</span></button><input type="hidden" name="mailbox_id[]"></li>');
+                    $li.find('.title').text($target.text());
+                    $li.find('input').val($target.val());
+                    $('.mailboxes').append($li);
+                    $('select[name=mailboxes]').val('');
+                }
+            });
+
+            $(document).on('click', '.mailboxes li button', function(){
+                var $target = $(this).closest('li');
+                $('select[name=mailboxes] [value=' + $target.find('input').val() + ']').prop('disabled', false);
+                $target.remove();
+            });
+        });
+    </script>
+<%- include("../_footer.ejs") %>

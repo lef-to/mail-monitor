@@ -1,0 +1,11 @@
+<% if (count / view > 1) { %>
+    <nav aria-label="ページ送りの実例">
+        <ul class="pagination justify-content-center">
+            <li class="page-item <%= page == 1 ? 'disabled' : '' %>"><a class="page-link" href="?page=<%= parseInt(page) - 1 %>">前へ</a></li>
+            <% for (var i = 1; i <= Math.ceil(count / view); i++) { %>
+                <li class="page-item <%= page == i ? 'active' : '' %>"><a class="page-link" href="?page=<%= i %>"><%= i %></a></li>
+            <% } %>
+            <li class="page-item <%= count / view < page ? 'disabled' : '' %>"><a class="page-link" href="?page=<%= parseInt(page) + 1 %>">次へ</a></li>
+        </ul>
+    </nav>
+<% } %>

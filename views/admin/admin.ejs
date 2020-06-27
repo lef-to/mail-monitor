@@ -1,0 +1,64 @@
+<%- include("./_header.ejs", {title: '管理者一覧'}) %>
+<body>
+
+    <%- include("./_header_nav.ejs") %>
+
+    <div id="content" class="container-fluid">
+
+        <%- include("./_menu.ejs", {menu:'admin'}) %>
+
+        <main role="main" class="mailmain col-md-9 ml-sm-auto col-lg-10 px-4">
+
+            <h4 class="float-left">管理者一覧</h4>
+            <a href="/admin/admin/new" class="btn btn-info btn-sm float-right">新規登録</a>
+
+            <span class="clearfix"></span>
+
+            <% if(messages.success){ %>
+            <div class="alert alert-success clearfix" role="alert"><%=messages.success %></div><br/>
+            <% } %>
+
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr class="d-flex">
+                        <th class="col-1">#</th>
+                        <th class="col-6">氏名</th>
+                        <th class="col-3">作成日時</th>
+                        <th class="col-2">&nbsp;</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% list.forEach(function(o) { %>
+                    <tr class="d-flex">
+                        <th class="col-1"><%= o.id %></th>
+                        <td class="col-6"><%= o.name %></td>
+                        <td class="col-3"><%= moment(o.createdAt).format('Y-MM-DD HH:mm:ss') %></td>
+                        <td class="col-2 text-right">
+                            <a href="/admin/admin/<%= o.id %>" class="btn btn-sm btn-success">変更</a>
+                            <a href="/admin/admin/delete/<%= o.id %>" class="btn btn-sm btn-danger del">削除</a>
+                        </td>
+                    </tr>
+                    <% }); %>
+                    </tbody>
+                </table>
+            </div>
+
+            <%- include("./_pagenate.ejs") %>
+        </main>
+
+    </div>
+
+
+    <%- include("./_js.ejs") %>
+    <script>
+        var socketio = io();
+
+        $(function(){
+            $('.del').click(function(){
+                return confirm('本当に削除しますか？');
+            });
+        });
+    </script>
+
+<%- include("../_footer.ejs") %>

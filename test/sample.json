@@ -1,0 +1,12 @@
+{
+    "auth": {
+        "user": "abcd",
+        "pass": "abcd"
+    },
+    "mail": {
+        "from": "\"Fred Foo 👻\" <foo@example.com>",
+        "to": "bar@example.com, baz@example.com",
+        "subject": "Hello ✔",
+        "text": ["Hello world?"]
+    }
+}

@@ -1,0 +1,207 @@
+<%- include("./_header.ejs", {title: '受信箱'}) %>
+<body id="mailbox">
+
+    <%- include("./_header_nav.ejs") %>
+
+    <div id="content" class="container-fluid">
+
+        <nav class="col-md-3 d-none d-md-block bg-light sidebar">
+
+            <div class="sidebar-sticky">
+
+                <ul class="nav flex-column maillist">
+                    <li class="nav-item unread template">
+                        <span class="subject"></span>
+                        <div class="info row mr-0">
+                            <span class="col-10">To:<span class="email"></span></span>
+                            <span class="col-2 time"></span>
+                        </div>
+                    </li>
+                </ul>
+
+            </div>
+        </nav>
+
+        <main role="main" class="mailmain col-md-8 ml-sm-auto col-lg-9 px-4">
+            <div class="flex-container-col flex-item mt-2">
+                <div class="message_wrapper">
+                    <div class="head row">
+                        <div class="col-9">
+                            <h2 class="subject"></h2>
+                            <div class="clearfix">
+                                <dl class="row">
+                                    <dt class="col-sm-1 font-weight-bold">From:</dt>
+                                    <dd class="col-sm-11 from"></dd>
+                                    <dt class="col-sm-1 font-weight-bold">To:</dt>
+                                    <dd class="col-sm-11 to"></dd>
+                                    <dt class="col-sm-1 font-weight-bold">Cc:</dt>
+                                    <dd class="col-sm-11 cc"></dd>
+                                    <dt class="col-sm-1 font-weight-bold">Bcc:</dt>
+                                    <dd class="col-sm-11 bcc"></dd>
+                                </dl>
+                            </div>
+                        </div>
+                        <div class="col-3 text-right">
+                            <p><small class="date"></small></p>
+                            <p><small class="time"></small></p>
+                            <p><small class="size"></small></p>
+                            <p>
+                                <div class="dropdown">
+                                    <small class="attachement dropdown-toggle" type="button" id="attachmentDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">pppp</small>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="attachmentDropdown" x-placement="bottom-end" style="transform: translate3d(-122px, 32px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                        <span class="dropdown-item template"></span>
+                                    </div>
+                                </div>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="body">
+                        <div class="message-content-wrapper">
+                            <div class="tabs-content rounded">
+
+                                <ul class="nav nav-tabs">
+                                    <li class="nav-item">
+                                        <a href="#html" class="nav-link active" data-toggle="tab">HTML</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#text" class="nav-link" data-toggle="tab">TEXT</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#raw" class="nav-link" data-toggle="tab">RAW</a>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content">
+                                    <div id="html" class="pre tab-pane active">
+                                        <div class="reset"></div>
+                                    </div>
+                                    <div id="text" class="pre tab-pane">
+                                        <pre></pre>
+                                    </div>
+                                    <div id="raw" class="pre tab-pane">
+                                        <pre></pre>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/assets/js/jquery-1.11.1.js"></script>
+    <script src="/modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        var socketio = io();
+
+        $(function(){
+
+            $('#breadcrumb').show();
+            $('#breadcrumb .mbox_name a')
+                .attr('href', '/mailbox/<%= mailbox.id %>')
+                .text('<%= mailbox.title %>');
+
+            socketio.emit('set_mailbox', <%= mailbox.id %>);
+
+            socketio.on('message',function(msg){
+                if (msg) {
+                    let mail = JSON.parse(msg);
+                    console.log(mail);
+                    let $li = $('.maillist li.template').clone();
+                    $li.removeClass('template');
+                    $li.data('data', msg);
+                    $li.find('.subject').text(mail.subject);
+                    $li.find('.email').text(mail.to.text);
+                    $li.find('.time').text(mail.datetime.split(' ')[1]);
+
+                    $li.click(function(){
+                        $('.maillist li').removeClass('active');
+                        $(this).addClass('active').removeClass('unread');
+
+                        let mail = JSON.parse($(this).data('data'));
+
+                        $('main .head .subject').text(mail.subject);
+                        $('main .head .from').text(mail.from.text);
+                        $('main .head .to').html(htmlEscape(mail.to.text).replace(/, /g, '<br />'));
+
+                        if (mail.cc) {
+                            $('main .head .cc').parent().find('> :nth-child(n+5)').show();
+                            $('main .head .cc').html(htmlEscape(mail.cc.text).replace(/, /g, '<br />'));
+                        } else {
+                            $('main .head .cc').parent().find('> :nth-child(n+5)').hide();
+                        }
+
+                        if (mail.bcc) {
+                            $('main .head .bcc').parent().find('> :nth-child(n+5)').show();
+                            $('main .head .bcc').html(htmlEscape(mail.bcc.text).replace(/, /g, '<br />'));
+                        } else {
+                            $('main .head .bcc').parent().find('> :nth-child(n+5)').hide();
+                        }
+
+                        $('main .head .date').text(mail.datetime);
+                        $('main .head .time').text(mail.time);
+                        $('main .head .size').text(mail.size);
+
+                        if (mail.attachments.length) {
+                            $('main .head .attachement').show();
+                            $('main .head .attachement').text('attachements (' + mail.attachments.length + ')');
+                            $('main .head .attachement + .dropdown-menu :not(.template)').remove();
+                            mail.attachments.forEach((obj, i) => {
+                                const $row = $('main .head .attachement + .dropdown-menu .template').clone();
+                                $row.removeClass('template');
+                                $row.text(obj.filename);
+                                $('main .head .attachement + .dropdown-menu').append($row);
+                            });
+                        } else {
+                            $('main .head .attachement').hide();
+                        }
+
+                        if (mail.text) {
+                            $('main .body .nav-tabs [href="#text"]').removeClass('disabled').click();
+                            $('main .body #text pre').html(mail.text);
+                        } else {
+                            $('main .body .nav-tabs [href="#text"]').addClass('disabled');
+                        }
+
+                        if (mail.html) {
+                            $('main .body .nav-tabs [href="#html"]').removeClass('disabled').click();
+                            $('main .body #html div').html(mail.html);
+                        } else {
+                            $('main .body .nav-tabs [href="#html"]').addClass('disabled');
+                        }
+
+                        let headers = $.map(mail.headerLines, function(v){ return v.line; }).join("\n");
+                        $('main .body #raw pre').text(headers +"\n\n"+ mail.text);
+
+                        $('main > div').show();
+
+                        $('#breadcrumb .subject').text(mail.subject).removeClass('text-hide');
+                    });
+                    $('.maillist').prepend($li);
+                }
+            });
+
+            const htmlEscape = (str) => {
+                if (!str) return;
+                return str.replace(/[<>&"'`]/g, (match) => {
+                    const escape = {
+                        '<': '&lt;',
+                        '>': '&gt;',
+                        '&': '&amp;',
+                        '"': '&quot;',
+                        "'": '&#39;',
+                        '`': '&#x60;'
+                    };
+                    return escape[match];
+                });
+            }
+        });
+    </script>
+</body>
+</html>

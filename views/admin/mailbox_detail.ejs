@@ -1,0 +1,58 @@
+<%- include("./_header.ejs", {title: 'メールボックス'}) %>
+<body>
+
+    <%- include("./_header_nav.ejs") %>
+
+    <div id="content" class="container-fluid">
+
+        <%- include("./_menu.ejs", {menu:'mailbox'}) %>
+
+        <main role="main" class="mailmain col-md-9 ml-sm-auto col-lg-10 px-4">
+
+            <h4>#<%= item.id %></h4>
+
+            <% if (messages.success) { %>
+            <div class="alert alert-success" role="alert"><%=messages.success %></div><br/>
+            <% } %>
+
+            <form method="post" action="/admin/mailbox">
+                <input type="hidden" name="id" value="<%= item.id %>">
+
+                <div class="mb-3">
+                    <label for="title">タイトル</label>
+                    <input type="text" class="form-control <%= errors['title'] ? 'is-invalid' : '' %>" id="title" placeholder="" name="title" value="<%= item.title %>">
+                    <div class="invalid-feedback"><%= errors['title'] %></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="name">名前</label>
+                    <input type="text" class="form-control <%= errors['name'] ? 'is-invalid' : '' %>" id="name" placeholder="" name="name" value="<%= item.name %>">
+                    <div class="invalid-feedback"><%= errors['name'] %></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password">パスワード</label>
+                    <input type="password" class="form-control <%= errors['pass'] ? 'is-invalid' : '' %>" id="password" placeholder="" name="pass" value="<%= item.pass %>">
+                    <div class="invalid-feedback"><%= errors['pass'] %></div>
+                </div>
+
+                <hr class="mb-4">
+
+                <div class="text-center">
+                    <a class="back btn btn-success btn-lg" href="/admin/mailbox">戻る</a>
+                    <button class="submit btn btn-primary btn-lg"><%= item.id ? '更新' : '登録' %></button>
+                </div>
+            </form>
+
+        </main>
+
+    </div>
+
+    <%- include("./_js.ejs") %>
+
+    <script>
+        $(function(){
+
+        });
+    </script>
+<%- include("../_footer.ejs") %>

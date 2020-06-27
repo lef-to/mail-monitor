@@ -1,0 +1,58 @@
+<%- include("./_header.ejs", {title: 'ダッシュボード'}) %>
+<body>
+
+<%- include("./_header_nav.ejs") %>
+
+<div id="content" class="container-fluid">
+    <main role="main">
+
+        <div class="offset-4 col-md-4 offset-4">
+
+            <% if(messages.success){ %>
+            <div class="alert alert-success clearfix" role="alert"><%=messages.success %></div><br/>
+            <% } %>
+
+            <form method="post" action="/setting">
+                <input type="hidden" name="id" value="<%= item.id %>">
+
+                <div class="mb-3">
+                    <label for="username">名前</label>
+                    <input type="text" class="form-control <%= errors['name'] ? 'is-invalid' : '' %>" id="username" placeholder="Username" name="name" value="<%= item.name %>">
+                    <div class="invalid-feedback"><%= errors['name'] %></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="email">メールアドレス</label>
+                    <input type="email" class="form-control <%= errors['email'] ? 'is-invalid' : '' %>" id="email" placeholder="you@example.com" name="email" value="<%= item.email %>">
+                    <div class="invalid-feedback"><%= errors['email'] %></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password">パスワード</label>
+                    <input type="password" class="form-control <%= errors['pass'] ? 'is-invalid' : '' %>" id="password" placeholder="" name="pass" value="<%= item.pass %>">
+                    <div class="invalid-feedback"><%= errors['pass'] %></div>
+                </div>
+
+                <hr class="mb-4">
+
+                <div class="text-center">
+                    <a class="back btn btn-success btn-lg" href="/">戻る</a>
+                    <button class="submit btn btn-primary btn-lg"><%= item.id ? '更新' : '登録' %></button>
+                </div>
+            </form>
+
+        </div>
+
+    </main>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script src="/modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script>
+    $(function(){
+
+    });
+</script>
+</body>
+</html>

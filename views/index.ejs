@@ -1,0 +1,31 @@
+<%- include("./_header.ejs", {title: 'ダッシュボード'}) %>
+<body>
+
+    <%- include("./_header_nav.ejs") %>
+
+    <div id="content" class="container-fluid">
+        <main role="main">
+
+            <div class="offset-2 col-md-8 offset-2">
+
+                <ul class="mailboxes list-group">
+                <% list.forEach(function(b) { %>
+                    <li class="list-group-item" role="button" onclick="location.href='/mailbox/<%= b.id %>'"><%= b.title %></li>
+                <% }) %>
+                </ul>
+
+            </div>
+
+        </main>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="/modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script>
+        $(function(){
+
+        });
+    </script>
+</body>
+</html>
