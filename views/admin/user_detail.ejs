@@ -1,5 +1,5 @@
 <%- include("./_header.ejs", {title: 'ユーザー'}) %>
-<body>
+<body id="user_detail">
 
     <%- include("./_header_nav.ejs") %>
 
@@ -82,26 +82,5 @@
     </div>
 
     <%- include("./_js.ejs") %>
-    <script>
-        $(function(){
 
-            $('#box_add').click(function(){
-                var $target = $('select[name=mailboxes] option:selected');
-                if ($target.val()) {
-                    $target.prop('disabled', true);
-                    var $li = $('<li class="list-group-item"><span class="title"></span><button type="button" class="close" aria-label="閉じる"><span aria-hidden="true">&times;</span></button><input type="hidden" name="mailbox_id[]"></li>');
-                    $li.find('.title').text($target.text());
-                    $li.find('input').val($target.val());
-                    $('.mailboxes').append($li);
-                    $('select[name=mailboxes]').val('');
-                }
-            });
-
-            $(document).on('click', '.mailboxes li button', function(){
-                var $target = $(this).closest('li');
-                $('select[name=mailboxes] [value=' + $target.find('input').val() + ']').prop('disabled', false);
-                $target.remove();
-            });
-        });
-    </script>
 <%- include("../_footer.ejs") %>

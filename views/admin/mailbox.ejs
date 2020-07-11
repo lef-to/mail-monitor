@@ -1,5 +1,5 @@
 <%- include("./_header.ejs", {title: 'メールボックス一覧'}) %>
-<body>
+<body id="mailbox">
 
     <%- include("./_header_nav.ejs") %>
 
@@ -52,38 +52,4 @@
 
     <%- include("./_js.ejs") %>
 
-    <script>
-        $(function(){
-
-            $(document).on('click', '.pagination li', function(){
-                var page = $(this).data('page') || 1;
-                $.getJSON('/api/admin/mailbox/' + page, function(json){
-                    if (json.page_max <= 1) {
-                        $('.pagination').hide();
-                    }
-                    for (var i = 1; i < page_max; i++) {
-
-                        var elm, active = '', li;
-                        if (page == i) {
-                            elm = 'span';
-                            active = 'active';
-                        } else {
-                            elm = 'a';
-                        }
-
-                        li = '<li class="page-item" data-page="' + i + '" ' + active + '><' + elm + ' class="page-link">' + i + '</' + elm + '></li>';
-
-                        $('.pagination next').before(li);
-                    }
-
-                    $('.pagination li.prev')[page == 1 ? 'addClass' : 'removeClass']('disabled');
-                    $('.pagination li.next')[page == json.page_max ? 'addClass' : 'removeClass']('disabled');
-                });
-            });
-
-            $('.del').click(function(){
-                return confirm('本当に削除しますか？');
-            });
-        });
-    </script>
 <%- include("../_footer.ejs") %>

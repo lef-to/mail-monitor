@@ -1,5 +1,5 @@
 <%- include("./_header.ejs", {title: 'ユーザ一覧'}) %>
-<body>
+<body id="user">
 
     <%- include("./_header_nav.ejs") %>
 
@@ -53,14 +53,5 @@
 
 
     <%- include("./_js.ejs") %>
-    <script>
-        var socketio = io();
-
-        $(function(){
-            $('.del').click(function(){
-                return confirm('本当に削除しますか？');
-            });
-        });
-    </script>
 
 <%- include("../_footer.ejs") %>

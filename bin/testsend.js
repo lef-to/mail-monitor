@@ -58,7 +58,7 @@ async function main() {
   const template = JSON.parse(fs.readFileSync(__dirname + '/../' + args.file, 'utf8'));
 
   let options = {}, defaults = {
-    host: template.host || process.env.MAIL_HOST,
+    host: template.host || process.env.SMTP_HOST,
     auth: template.auth,
     tls: { rejectUnauthorized: false },
     debug: false
@@ -69,7 +69,7 @@ async function main() {
     options.secure = true;
     options.requireTLS = true;
   } else {
-    options.port = template.port || process.env.MAIL_PORT;
+    options.port = template.port || process.env.SMTP_INSECURE_PORT;
     options.secure = false;
     options.ignoreTLS = true;
   }
