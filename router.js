@@ -36,6 +36,55 @@ router.get('/' , async(req, res) => {
     }
 });
 
+router.get('/setup', async (req, res) => {
+
+    if (await isAdminExists() ) {
+        res.redirect('/admin');
+    } else {
+        res.render(__dirname + '/views/setup.ejs', {
+            item:{},
+            errors:{}
+        });
+    }
+});
+
+router.post('/setup', async (req, res) => {
+    if (await isAdminExists()) {
+        res.redirect('/admin');
+    } else {
+        var errors = {};
+
+        if(req.body.name == '') {
+            errors.name = '名前は必須です。';
+        }
+        if(req.body.email == '') {
+            errors.email = 'メールアドレスは必須です。';
+        } else if (!checkMail(req.body.email)) {
+            errors.email = '正しいメールアドレスではありません。';
+        }
+        if(req.body.pass == '') {
+            errors.pass = 'パスワードは必須です。';
+        }
+
+        if (Object.keys(errors).length == 0) {
+
+            await db.admins.create({
+                name: req.body.name,
+                email: req.body.email,
+                pass: pass2hash(req.body.pass),
+            });
+
+            req.flash('success', '登録しました');
+            res.redirect('/admin/login');
+        } else {
+            res.render(__dirname + '/views/setup.ejs', {
+                item: req.body,
+                errors: errors
+            });
+        }
+    }
+});
+
 router.get('/login' , async (req, res) => {
 
     if (is_login(req)) {
@@ -583,6 +632,13 @@ function paginate( page, pageSize) {
         offset,
         limit,
     };
+};
+
+async function isAdminExists () {
+    const results = await Promise.all([
+        db.admins.count()
+    ])
+    return results.reduce((a, b) => a + b, 0);
 };
 
 module.exports = router;

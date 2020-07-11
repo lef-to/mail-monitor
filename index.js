@@ -1,46 +1,40 @@
 require('dotenv').config();
 
-var datetime = require('node-datetime');
-var moment = require("moment");
 
+const datetime = require('node-datetime');
+const moment = require("moment");
+const crypto = require('crypto');
+const fs = require('fs');
 const log4js = require('log4js');
-var express = require('express');
-var app = express();
-var http = require('http').Server(app);
+const db = require('./models/index');
 
 var mbox_map = [];
 
-
-const flash = require('express-flash');
-const session = require('express-session');
-const cookieParser = require('cookie-parser');
-
-const bodyParser = require('body-parser');
-const io = require('socket.io')(http);
-const HTTP_PORT = process.env.HTTP_PORT || 8080;
-
-const crypto = require('crypto');
-const fs = require('fs');
-
-const router = require('./router');
-const db = require('./models/index');
-
-
-
-const PAGE_VIEW = process.env.PAGE_VIEW;
-
-
+/******************************************************************************
+ * LOG
+ ******************************************************************************/
 log4js.configure('./config/log.json');
+
 const systemLogger = log4js.getLogger('system');
 const httpLogger = log4js.getLogger('http');
 const accessLogger = log4js.getLogger('access');
 const socketLogger = log4js.getLogger('socket');
 const smtpLogger = log4js.getLogger('smtp');
+
 systemLogger.info("App start");
 
 /******************************************************************************
  * HTTP
  ******************************************************************************/
+const HTTP_PORT = process.env.HTTP_PORT || 8080;
+const express = require('express');
+const app = express();
+const http = require('http').Server(app);
+const flash = require('express-flash');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const router = require('./router');
 
 app.use(bodyParser.urlencoded({
     extended: true
@@ -84,6 +78,8 @@ app.use( function (req, res, next) {
 /******************************************************************************
  * SOCKET
  ******************************************************************************/
+const io = require('socket.io')(http);
+
 io.on('connection',function(socket){
     socketLogger.info('http connected');
 

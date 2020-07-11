@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TrapMail</title>
+    <link rel="stylesheet" href="/modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/login.css">
+    <style>
+        .form-box input[name="email"]{
+            border-radius: 0;
+            text-transform: lowercase;
+            border-top: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="login-container">
+            <div id="output"></div>
+            <div class="">Please admin account create.</div>
+            <div class="form-box">
+
+                <% if (messages.success) { %>
+                <div class="alert alert-success clearfix" role="alert"><%=messages.success %></div><br/>
+                <% } %>
+                <% if (errors.name) { %>
+                <div class="alert alert-danger clearfix" role="alert"><%=errors.name%></div>
+                <% } %>
+                <% if (errors.email) { %>
+                <div class="alert alert-danger clearfix" role="alert"><%=errors.email%></div>
+                <% } %>
+                <% if (errors.pass) { %>
+                <div class="alert alert-danger clearfix" role="alert"><%=errors.pass%></div>
+                <% } %>
+
+                <form action="/setup" method="post">
+                    <input name="name" type="text" placeholder="name" autocomplete="off" value="<%=item.name%>">
+                    <input name="email" type="text" placeholder="email" autocomplete="off" value="<%=item.email%>">
+                    <input name="pass" type="password" placeholder="password" autocomplete="off" value="<%=item.pass%>">
+                    <button class="btn btn-info btn-block login" type="submit">Create</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="/modules/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

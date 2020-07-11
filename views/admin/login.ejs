@@ -12,6 +12,10 @@
 
             <div class="form-box">
 
+                <% if(messages.success){ %>
+                <div class="alert alert-success clearfix" role="alert"><%=messages.success %></div><br/>
+                <% } %>
+
                 <% if(messages.error){ %>
                 <div class="alert alert-danger clearfix" role="alert"><%=messages.error %></div><br/>
                 <% } %>
