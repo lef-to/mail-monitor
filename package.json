@@ -29,7 +29,7 @@
     "sequelize": "^5.21.11",
     "sequelize-cli": "^5.5.1",
     "smtp-server": "^3.6.0",
-    "socket.io": "^2.3.0",
+    "socket.io": "^2.4.0",
     "spf-validator": "^0.2.0",
     "sqlite": "^4.0.9",
     "sqlite3": "^4.2.0"
