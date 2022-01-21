@@ -20,7 +20,7 @@
     "express-flash": "0.0.2",
     "express-session": "^1.17.1",
     "jquery": "^3.5.1",
-    "log4js": "^6.3.0",
+    "log4js": "^6.4.0",
     "mailparser": "^2.7.7",
     "moment": "^2.26.0",
     "node-datetime": "^2.1.2",
